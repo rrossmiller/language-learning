@@ -27,6 +27,6 @@ func check(e error) {
 }
 
 func writeDot(b []byte) {
-	err := os.WriteFile("g.dot", b, 0644)
+	err := os.WriteFile("g.dot", b, 0644) //644: -rw-r--r--
 	check(err)
 }
