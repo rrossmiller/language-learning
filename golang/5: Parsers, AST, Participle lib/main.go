@@ -144,7 +144,7 @@ func main() {
 	b, _ := os.ReadFile(fName)
 	ini, err := parser.ParseString(fName, string(b))
 	Check(err)
-	fmt.Printf("v: %v\n", ini)
+	fmt.Printf("%v\n", ini)
 	fmt.Println("\n\nrepr:")
 	repr.Println(ini, repr.Indent("  "), repr.OmitEmpty(true))
 }
