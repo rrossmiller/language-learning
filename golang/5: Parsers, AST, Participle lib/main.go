@@ -76,12 +76,17 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/alecthomas/participle/lexer"
 	"github.com/alecthomas/participle/v2"
 	"github.com/alecthomas/repr"
 )
+
+func Check(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
 // root structure
 type INI struct {
@@ -102,47 +107,28 @@ type Section struct {
 	Properties []*Property `@@*`
 }
 
-func (v Value) String() string {
-	switch {
-	case v.Number != nil:
-		return fmt.Sprintf("%v - %v", v.Pos, *v.Number)
-	case v.Str != nil:
-		return fmt.Sprintf("%v - %v", v.Pos, *v.Str)
-	default:
-		return ""
-	}
-}
-func (v Property) String() string {
-	return fmt.Sprintf("%v:%v", v.Key, *v.Value)
+// func main() {
+// 	parser, err := participle.Build[INI]()
+// 	Check(err)
+
+// 	fName := "parseme.ini"
+// 	b, _ := os.ReadFile(fName)
+// 	ini, err := parser.ParseString(fName, string(b))
+// 	Check(err)
+// 	fmt.Printf("%v\n", ini)
+// 	fmt.Println("\n\nrepr:")
+// 	repr.Println(ini, repr.Indent("  "), repr.OmitEmpty(true))
+// }
+
+type Blank struct {
+	Blank string `"_"`
 }
 
-func (v INI) String() string {
-	rtn := "Props: "
-	for _, v := range v.Properties {
-		rtn += fmt.Sprintf("\n\t%v", v)
-	}
-	rtn += "\nSections"
-	for _, v := range v.Sections {
-		rtn += fmt.Sprintf("\n\t%v", v.Identifier)
-		for _, p := range v.Properties {
-			rtn += fmt.Sprintf("\n\t\t%v", p)
-		}
-	}
-	return rtn
-}
-
-func Check(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
 func main() {
-	parser, err := participle.Build[INI]()
+	parser, err := participle.Build[Blank]()
 	Check(err)
 
-	fName := "parseme.ini"
-	b, _ := os.ReadFile(fName)
-	ini, err := parser.ParseString(fName, string(b))
+	ini, err := parser.ParseString("fName", "_")
 	Check(err)
 	fmt.Printf("%v\n", ini)
 	fmt.Println("\n\nrepr:")
