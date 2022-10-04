@@ -1,15 +1,4 @@
-from manim import (
-    Scene,
-    Create,
-    Transform,
-    FadeOut,
-    ReplacementTransform,
-    Rotate,
-    FadeTransformPieces,
-)
-from manim import Circle, Square, Triangle
-from manim import PI, RIGHT, LEFT
-from manim import PINK, BLUE, GREEN, YELLOW
+from manim import *
 
 
 class CreateCircle(Scene):
