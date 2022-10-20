@@ -5,16 +5,19 @@ import (
 	"time"
 )
 
-func NotRecursive(max, numWorkers int) {
+func NotRecursive(max, numWorkers int, verbose bool) {
 	start := time.Now()
 	ch := make(chan int)
 	go run(max, numWorkers, ch)
 
-	for range ch {
-		// fmt.Println(msg)
-	}
+	elapsed := fmt.Sprintf("elapsed %v", time.Since(start))
 
-	fmt.Printf("elapsed %v", time.Since(start))
+	if verbose {
+		for msg := range ch {
+			fmt.Println(msg)
+		}
+	}
+	fmt.Println(elapsed)
 }
 
 func run(max, numWorkers int, ch chan int) {

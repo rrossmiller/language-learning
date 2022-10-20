@@ -21,22 +21,23 @@ func main() {
 	}
 	close(jobs) // this is safe becuase main is the sender to jobs
 
-	cnt := 1
-	for i := range results {
-		fmt.Println(cnt, i)
-
-		if cnt == ttl {
-			close(results)
-		}
-		cnt++
-	}
-
 	// Code to measure
 	duration := time.Since(start)
-	fmt.Println(duration.Seconds())
+	fmt.Println("elapsed", duration)
+
+	// // print results
+	// cnt := 1
+	// for i := range results {
+	// 	fmt.Println(cnt, i)
+
+	// 	if cnt == ttl {
+	// 		close(results)
+	// 	}
+	// 	cnt++
+	// }
 
 	// not recursive
-	NotRecursive(ttl, numWorkers)
+	NotRecursive(ttl, numWorkers, false)
 }
 
 func worker(jobs <-chan int, results chan<- int) {
