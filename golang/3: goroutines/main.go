@@ -10,7 +10,7 @@ func main() {
 	ttl := 40
 	jobs := make(chan int, ttl)
 	results := make(chan int, ttl)
-	numWorkers := 1
+	numWorkers := 8
 
 	for i := 0; i < numWorkers; i++ {
 		go worker(jobs, results)
@@ -34,6 +34,9 @@ func main() {
 	// Code to measure
 	duration := time.Since(start)
 	fmt.Println(duration.Seconds())
+
+	// not recursive
+	NotRecursive(ttl, numWorkers)
 }
 
 func worker(jobs <-chan int, results chan<- int) {
