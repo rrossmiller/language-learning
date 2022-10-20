@@ -7,7 +7,7 @@ import (
 
 func main() {
 	start := time.Now()
-	ttl := 45
+	ttl := 40
 	jobs := make(chan int, ttl)
 	results := make(chan int, ttl)
 	numWorkers := 1
