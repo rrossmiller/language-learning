@@ -8,7 +8,7 @@ import (
 func NotRecursive(max, numWorkers int, verbose bool) {
 	start := time.Now()
 	ch := make(chan int)
-	go run(max, numWorkers, ch)
+	go run(max, ch)
 
 	elapsed := fmt.Sprintf("elapsed %v", time.Since(start))
 
@@ -20,7 +20,7 @@ func NotRecursive(max, numWorkers int, verbose bool) {
 	fmt.Println(elapsed)
 }
 
-func run(max, numWorkers int, ch chan int) {
+func run(max int, ch chan int) {
 	fib := make([]int, max)
 	fib[0] = 0
 	fib[1] = 1
