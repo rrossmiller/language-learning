@@ -37,7 +37,7 @@ func main() {
 	// }
 
 	// not recursive
-	NotRecursive(ttl, numWorkers, false)
+	NotRecursive(ttl, numWorkers, true)
 }
 
 func worker(jobs <-chan int, results chan<- int) {
