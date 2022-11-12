@@ -12,11 +12,11 @@ import (
 	"github.com/fatih/color"
 )
 
-var green = color.New(color.FgRed).SprintFunc()
+var red = color.New(color.FgRed).SprintFunc()
+var blue = color.New(color.FgBlue).SprintFunc()
 var noCase *bool
 
 func main() {
-	// parallel := flag.Bool("p", false, "search files in parallel")
 	noCase = flag.Bool("i", false, "case insensitve")
 	// recursive := flag.Bool("r", false, "recursive")
 	// regex := flag.Bool("r", false, "regex")
@@ -27,13 +27,12 @@ func main() {
 	if *noCase {
 		pattern = strings.ToLower(pattern)
 	}
-
-	var outputSb strings.Builder
 	var wg sync.WaitGroup
 	wg.Add(len(fileNames))
 
+	output := make([]string, len(fileNames))
 	// for every file
-	for _, fileName := range fileNames {
+	for i, fileName := range fileNames {
 		// check if the file exists
 		if _, e := os.Stat(fileName); errors.Is(e, os.ErrNotExist) {
 			fmt.Printf("%q does not exist\n", fileName)
@@ -41,14 +40,17 @@ func main() {
 		}
 
 		multiFile := len(fileNames) > 1
-		go searchFile(fileName, pattern, multiFile, &outputSb, &wg) // fixme write files together
+		go searchFile(fileName, pattern, multiFile, output, i, &wg)
 	}
 	wg.Wait()
+
 	// print the output
-	fmt.Println(outputSb.String())
+	for _, v := range output {
+		fmt.Print(v)
+	}
 }
 
-func searchFile(fileName, pattern string, multiFile bool, outputSb *strings.Builder, wg *sync.WaitGroup) {
+func searchFile(fileName, pattern string, multiFile bool, output []string, outIdx int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	// read the file
@@ -75,12 +77,12 @@ func searchFile(fileName, pattern string, multiFile bool, outputSb *strings.Buil
 		for j, word := range strings.Split(lineMutStr, " ") {
 			// if the word contains the pattern
 			if strings.Contains(word, pattern) {
-				lineHasPattern = true                                         // the pattern is found in the line
-				idx := strings.Index(word, pattern)                           // start index of the pattern in the word
-				pre := string(lineSplit[j][:idx])                             // string before the pattern
-				match := green(string(lineSplit[j][idx : idx+patternLength])) // hightlight the pattern in the string
-				post := string(lineSplit[j][idx+patternLength:])              // string after the pattern
-				lineSplit[j] = pre + match + post                             // overwrite the text with the highlighted pattern
+				lineHasPattern = true                                       // the pattern is found in the line
+				idx := strings.Index(word, pattern)                         // start index of the pattern in the word
+				pre := string(lineSplit[j][:idx])                           // string before the pattern
+				match := red(string(lineSplit[j][idx : idx+patternLength])) // hightlight the pattern in the string
+				post := string(lineSplit[j][idx+patternLength:])            // string after the pattern
+				lineSplit[j] = pre + match + post                           // overwrite the text with the highlighted pattern
 			}
 			lineSb.WriteString(lineSplit[j] + " ") // write the word to the line string builder
 		}
@@ -89,11 +91,11 @@ func searchFile(fileName, pattern string, multiFile bool, outputSb *strings.Buil
 		if lineHasPattern {
 			var s string
 			if multiFile {
-				s = fmt.Sprintf("%d:%s: %s\n", i+1, fileName, lineSb.String())
+				s = fmt.Sprintf("%s:%s: %s\n", blue(i+1), blue(fileName), lineSb.String())
 			} else {
-				s = fmt.Sprintf("%d: %s\n", i+1, lineSb.String())
+				s = fmt.Sprintf("%s: %s\n", blue(i+1), lineSb.String())
 			}
-			outputSb.WriteString(s)
+			output[outIdx] += s
 		}
 		lineSb.Reset() // reset the line string builder for the next line
 	}
