@@ -18,7 +18,7 @@ var noCase *bool
 var multiFile bool
 
 func main() {
-	noCase = flag.Bool("i", false, "case insensitve")
+	noCase = flag.Bool("i", false, "case insensitve") // fixme this is broken
 	// recursive := flag.Bool("r", false, "recursive")
 	// regex := flag.Bool("r", false, "regex")
 	flag.Parse()
@@ -31,7 +31,7 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(len(fileNames))
 
-	output := make([]string, len(fileNames))
+	output := make([]string, len(fileNames)) // make this a chan instead of list for searchFilePar
 	// for every file
 	for i, fileName := range fileNames {
 		// check if the file exists
@@ -174,3 +174,4 @@ func check(e error) {
 		// log.Fatal("something went wrong reading the fileNames")
 	}
 }
+
