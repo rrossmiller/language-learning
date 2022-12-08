@@ -1,12 +1,15 @@
-package main
+// Copyright 2017 The go-python Authors.  All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package slices
 
 import (
 	"fmt"
-	"time"
 )
 
 func NotRecursive(max, numWorkers int, verbose bool) {
-	start := time.Now()
+	// start := time.Now()
 	ch := make(chan int)
 	go run(max, ch)
 
@@ -15,9 +18,8 @@ func NotRecursive(max, numWorkers int, verbose bool) {
 			fmt.Println(msg)
 		}
 	}
-	elapsed := fmt.Sprintf("elapsed %v", time.Since(start))
-
-	fmt.Println(elapsed)
+	// elapsed := fmt.Sprintf("elapsed %v", time.Since(start))
+	// fmt.Println(elapsed)
 }
 
 func run(max int, ch chan int) {
