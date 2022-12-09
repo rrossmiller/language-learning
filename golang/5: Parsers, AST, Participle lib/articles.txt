@@ -1,2 +1,0 @@
-https://www.twilio.com/blog/abstract-syntax-trees
-https://www.gimtec.io/articles/how-linters-work/
