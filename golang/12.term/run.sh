@@ -1,3 +1,0 @@
-go build && \
-    clear && \
-    ./termstuff
