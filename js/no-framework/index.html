@@ -1,52 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-    <script type="module" src="./src/main.ts"></script>
-
-  </head>
-  <body>
-    <div
-      id="app"
-      class="flex h-screen flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100"
-    >
-      <div>
-        <h1
-          class="bg-gradient-to-r from-green-600 to-sky-400 bg-clip-text text-5xl font-black text-transparent selection:bg-transparent"
-        >
-          Hello!
-        </h1>
-        <h3
-          class="bg-gradient-to-r from-yellow-600 to-green-400 bg-clip-text text-3xl font-black text-transparent selection:bg-transparent"
-        >
-        Color the nodes differently.
-        </h3>
-        <h3
-          class="bg-gradient-to-r from-yellow-600 to-green-400 bg-clip-text text-3xl font-black text-transparent selection:bg-transparent"
-        >
-        toggle dragability
-        </h3>
-        <h3
-          class="bg-gradient-to-r from-yellow-600 to-green-400 bg-clip-text text-3xl font-black text-transparent selection:bg-transparent"
-        >
-        highlight node for row in table
-        </h3>
-        <h3 class="my-4 text-2xl font-bold text-gray-500">
-          Vite + JS + tailwindcss v3
-        </h3>
-        <a href="https://vitejs.dev/guide/features.html" target="_blank"
-          >Documentation</a
-        >
-      </div>
-      <div>
-      <button class="dsybtn" id="drawGraphVis">Draw GraphVis</button>
-      <button class="dsybtn line-through" id="drawGraph">Draw D3 Graph</button>
-      </div>
-      <div id="my_dataviz" class="hidden border border-black h-96"></div>
-      <img class="block" src="./src/assets/powered-by-vitawind-bright.png" />
-    </div>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vite App</title>
+        <script type="module" src="./src/main.ts"></script>
+    </head>
+    <body>
+        <div id="app" class="flex h-screen flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
+            <div>
+                <h1 class="bg-gradient-to-r from-green-600 to-sky-400 bg-clip-text text-5xl font-black text-transparent selection:bg-transparent">Hello!</h1>
+                <h3 class="bg-gradient-to-r from-yellow-600 to-green-400 bg-clip-text text-3xl font-black text-transparent selection:bg-transparent">
+                    get data from api
+                </h3>
+                <h3 class="bg-gradient-to-r from-yellow-600 to-green-400 bg-clip-text text-3xl font-black text-transparent selection:bg-transparent">
+                    highlight node for row in table
+                </h3>
+                <h3 class="my-4 text-2xl font-bold text-gray-500">Vite + JS + tailwindcss v3</h3>
+                <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
+            </div>
+            <div>
+                <button class="dsybtn" id="drawGraphVis">Draw Graph</button>
+            </div>
+            <div id="my_dataviz" class="hidden border border-black h-96"></div>
+            <img class="block" src="./src/assets/powered-by-vitawind-bright.png" />
+        </div>
+    </body>
 </html>
