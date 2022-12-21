@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "cross-env": "^7.0.3",
+    "d3": "^7.7.0",
     "daisyui": "^2.46.0"
   },
-  "name": "no-framework"
+  "name": "app"
 }
