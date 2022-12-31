@@ -4,6 +4,7 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import networkx as nx
 import json
+import csv
 
 # load the karate club graph
 G = nx.karate_club_graph()
@@ -24,8 +25,18 @@ nx.draw_networkx_nodes(
 )
 nx.draw_networkx_edges(G, pos, alpha=0.5)
 plt.savefig("plt.png")
+print("louvain")
+louvain = nx.algorithms.community.louvain_communities(G)
+l = []
+for i in louvain:
+    l.append(sorted(list(i)))
+print(l)
+with open("res.txt", "w") as fout:
+    csv.writer(fout).writerows(l)
 
-
+print("label prop")
+print(list(nx.algorithms.community.label_propagation_communities(G)))
+print()
 print(f"results: {json.dumps(partition, indent=1)}")
 with open("results.json", "w") as fout:
     json.dump(partition, fout, indent=2)

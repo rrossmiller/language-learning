@@ -37,15 +37,19 @@ func ReadEdgesFile(path string) Record {
 // write a dotfile
 func WriteDotFile(graph *simple.DirectedGraph) {
 	b, err := dot.Marshal(graph, "complete", "", "\t")
-	if err != nil {
-		panic(err)
-	}
+	Check(err)
 
 	DirExists("vis")
 	err = os.WriteFile("vis/g.dot", b, 0644) //644: -rw-r--r--
 	Check(err)
 
 	// fmt.Println("dot -Tpng ../vis/g.dot > ../vis/graph.png") // run to make png
+}
+
+func WriteFile(b []byte, fname string) {
+	DirExists("vis")
+	err := os.WriteFile(fname, b, 0644) //644: -rw-r--r--
+	Check(err)
 }
 
 func DirExists(pth string) {
