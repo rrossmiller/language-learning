@@ -2,9 +2,13 @@ package ops
 
 import (
 	"encoding/csv"
+	"fmt"
 	"os"
+	"sort"
 	"strings"
 
+	"gonum.org/v1/gonum/graph"
+	"gonum.org/v1/gonum/graph/community"
 	"gonum.org/v1/gonum/graph/encoding/dot"
 	"gonum.org/v1/gonum/graph/simple"
 )
@@ -56,4 +60,44 @@ func DirExists(pth string) {
 	if _, err := os.Stat(pth); os.IsNotExist(err) {
 		os.Mkdir(pth, 0750)
 	}
+}
+
+func MarshalClusters(clusters [][]graph.Node) ([]byte, error) {
+	var sb strings.Builder
+	for _, c := range clusters {
+		sort.Slice(c, func(i, j int) bool {
+			return c[i].ID() < c[j].ID()
+		})
+		for _, n := range c {
+			sb.WriteString(fmt.Sprintf("%v,", n))
+		}
+		sb.WriteString("\n")
+	}
+	return []byte(sb.String()), nil
+}
+func MarshalClustersMap(out map[int]int) ([]byte, error) {
+	var sb strings.Builder
+	sb.WriteString("{\n")
+	keys := make([]int, 0, len(out))
+	for k := range out {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	var s string
+	for i, k := range keys {
+		ci := out[k]
+
+		if i < len(keys)-1 {
+			s = fmt.Sprintf("\t\"%v\": %v,\n", k, ci)
+		} else {
+			s = fmt.Sprintf("\t\"%v\": %v", k, ci)
+		}
+		sb.WriteString(s)
+	}
+	sb.WriteString("\n}")
+	return []byte(sb.String()), nil
+}
+
+func rgString(rg community.ReducedGraph) string {
+	return fmt.Sprintf("C: %v \n\nstructure: %v \n\nExp:%v", rg.Communities(), rg.Structure(), rg.Expanded())
 }
