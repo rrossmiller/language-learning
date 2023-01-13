@@ -1,7 +1,7 @@
 package main
 
-func check(e error){
-	if e != nil{
+func Check(e error) {
+	if e != nil {
 		panic(e)
 	}
 }
