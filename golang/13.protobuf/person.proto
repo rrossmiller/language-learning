@@ -1,0 +1,12 @@
+syntax="proto3";
+option go_package = "./pb";
+
+message Food{
+    string name = 1;
+    string country = 2;
+}
+message Person{
+    string name = 1;
+    int32 age = 2;
+    Food favFood = 3;
+}
