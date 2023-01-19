@@ -56,7 +56,6 @@ func main() {
 	contents = make([]byte, reader.Len())
 	_, err = reader.ReadAt(contents, 0)
 	check(err)
-	contents = append(contents, byte('x'))
 }
 
 func check(err error) {
