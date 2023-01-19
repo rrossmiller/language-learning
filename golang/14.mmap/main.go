@@ -11,48 +11,59 @@ import (
 
 func main() {
 	count := 1000
-	pth := "tgresponse"
+	pth := "donquijote.txt" // https://www.gutenberg.org/files/996/996-0.txt
+	times := make([]float64, count)
 
 	//mmap start
-	start := time.Now()
-	reader, err := mmap.Open(pth + "/PaperSrc.csv")
+	reader, err := mmap.Open(pth)
 	check(err)
 	defer reader.Close()
-
-	fmt.Printf("reader.Len(): %v\n", reader.Len())
 
 	contents := make([]byte, reader.Len())
 	var bytesRead int
 	for i := 0; i < count; i++ {
+		start := time.Now()
 		bytesRead, err = reader.ReadAt(contents, 0)
 		check(err)
+		if bytesRead != reader.Len() {
+			fmt.Println(len(contents))
+			fmt.Println(bytesRead)
+			panic("ahhhh")
+		}
+		times[i] = float64(time.Since(start).Microseconds())
 	}
-	if bytesRead != reader.Len() {
-		fmt.Println(len(contents))
-		fmt.Println(bytesRead)
-		panic("ahhhh")
-	}
-	mmtime := time.Since(start)
+	mmtime := avg(times)
+
 	//mmap end
 
 	// read file start
-	start = time.Now()
 	for i := 0; i < count; i++ {
-		contents, err = os.ReadFile(pth + "/PaperSrc.csv")
+		start := time.Now()
+		contents, err = os.ReadFile(pth)
 		check(err)
+		times[i] = float64(time.Since(start).Microseconds())
+
 	}
-	two := time.Since(start)
-
+	fileRead := avg(times)
 	// read file end
-	fmt.Println(strings.Split(string(contents), "\n")[:2])
 
-	fmt.Println(mmtime)
-	fmt.Println(two)
-	fmt.Println(float32(two) / float32(mmtime))
+	fmt.Println(strings.Split(string(contents), "\n")[1000:1002])
+	fmt.Println(mmtime, "micro sec avg")
+	fmt.Println(fileRead, "micro sec avg")
+	xFaster := float64(fileRead) / float64(mmtime)
+	fmt.Printf("mmap is %.3f times faster\n", xFaster)
 }
 
 func check(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func avg(times []float64) (ttl float64) {
+	for _, v := range times {
+		ttl += v
+	}
+	ttl = ttl / float64(len(times))
+	return
 }
