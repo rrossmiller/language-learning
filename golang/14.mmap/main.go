@@ -52,6 +52,11 @@ func main() {
 	fmt.Println(fileRead, "micro sec avg")
 	xFaster := float64(fileRead) / float64(mmtime)
 	fmt.Printf("mmap is %.3f times faster\n", xFaster)
+
+	contents = make([]byte, reader.Len())
+	_, err = reader.ReadAt(contents, 0)
+	check(err)
+	contents = append(contents, byte('x'))
 }
 
 func check(err error) {
