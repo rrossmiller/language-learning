@@ -42,8 +42,8 @@ fn main() {
 
 fn fib(max_idx: i32) -> Vec<i64> {
     let mut rtn = vec![0, 1];
-    for i in 2..max_idx {
-        let x = rtn[i as usize - 2] + rtn[i as usize - 1];
+    for i in 2 as usize..max_idx as usize {
+        let x = rtn[i as usize - 2] + rtn[i - 1];
         rtn.push(x);
     }
     rtn
