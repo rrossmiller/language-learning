@@ -8,3 +8,8 @@ edges.csv
 
 # rust
 target
+lightning_logs
+mlruns
+
+# data
+*.json
