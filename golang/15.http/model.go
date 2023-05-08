@@ -1,6 +1,11 @@
 package main
 
-type Response struct {
+type Ndc struct {
+	NDC          string `json:"nationalDrugCode"`
+	DrugName     string `json:"drugName"`
+	DrugStrength string `json:"drugStrength"`
+}
+type IndicationResponse struct {
 	Meta struct {
 		Disclaimer  string `json:"disclaimer"`
 		Terms       string `json:"terms"`
@@ -70,5 +75,52 @@ type Response struct {
 			PharmClassMoa      []string `json:"pharm_class_moa"`
 			Unii               []string `json:"unii"`
 		} `json:"openfda"`
+	} `json:"results"`
+}
+
+type NdcResponse struct {
+	Meta struct {
+		Disclaimer  string `json:"disclaimer"`
+		Terms       string `json:"terms"`
+		License     string `json:"license"`
+		LastUpdated string `json:"last_updated"`
+		Results     struct {
+			Skip  int `json:"skip"`
+			Limit int `json:"limit"`
+			Total int `json:"total"`
+		} `json:"results"`
+	} `json:"meta"`
+	Results []struct {
+		ProductNdc        string `json:"product_ndc"`
+		GenericName       string `json:"generic_name"`
+		LabelerName       string `json:"labeler_name"`
+		BrandName         string `json:"brand_name"`
+		ActiveIngredients []struct {
+			Name     string `json:"name"`
+			Strength string `json:"strength"`
+		} `json:"active_ingredients"`
+		Finished  bool `json:"finished"`
+		Packaging []struct {
+			PackageNdc         string `json:"package_ndc"`
+			Description        string `json:"description"`
+			MarketingStartDate string `json:"marketing_start_date"`
+			Sample             bool   `json:"sample"`
+		} `json:"packaging"`
+		ListingExpirationDate string `json:"listing_expiration_date"`
+		Openfda               struct {
+			ManufacturerName   []string `json:"manufacturer_name"`
+			SplSetID           []string `json:"spl_set_id"`
+			IsOriginalPackager []bool   `json:"is_original_packager"`
+			Unii               []string `json:"unii"`
+		} `json:"openfda"`
+		MarketingCategory  string   `json:"marketing_category"`
+		DosageForm         string   `json:"dosage_form"`
+		SplID              string   `json:"spl_id"`
+		ProductType        string   `json:"product_type"`
+		Route              []string `json:"route"`
+		MarketingStartDate string   `json:"marketing_start_date"`
+		ProductID          string   `json:"product_id"`
+		ApplicationNumber  string   `json:"application_number"`
+		BrandNameBase      string   `json:"brand_name_base"`
 	} `json:"results"`
 }

@@ -10,3 +10,6 @@ edges.csv
 target
 lightning_logs
 mlruns
+
+# data
+*.json
