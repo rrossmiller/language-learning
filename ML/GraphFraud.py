@@ -229,10 +229,11 @@ if __name__ == "__main__":
     test_set = DataLoader(g, test_idx, sampler, batch_size=len(test_idx))
 
     mlf_logger = MLFlowLogger()
+    accel = "gpu" if torch.cuda.is_available() else "cpu"
     model = GCN(g, g.ndata["feature"].shape[1], 16, dataset.num_classes, g.etypes)
     trainer = pl.Trainer(
         max_epochs=5_000,
-        # accelerator="cpu",
+        accelerator=accel,
         log_every_n_steps=1,
         logger=mlf_logger,
     )
