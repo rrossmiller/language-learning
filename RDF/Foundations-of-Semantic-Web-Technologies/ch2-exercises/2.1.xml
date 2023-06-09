@@ -1,0 +1,38 @@
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:iswww="http://sw.edu/#"
+>
+  <rdf:Description rdf:about="http://sw.edu/#germany">
+    <rdf:type rdf:resource="http://sw.edu/#country" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://sw.edu/#capital_of">
+    <rdf:type
+      rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/
+    >
+    <rdfs:domain rdf:resource="http://sw.edu/#city" />
+    <rdfs:range rdf:resource="http://sw.edu/#country" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://sw.edu/#country">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:label xml:lang="de">Land</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://sw.edu/#berlin">
+    <rdfs:label xml:lang="en">Berlin</rdfs:label>
+    <rdf:type rdf:resource="http://sw.edu/#city" />
+    <iswww:capital_of rdf:resource="http://sw.edu/#germany" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://sw.edu/#city">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:label xml:lang="de">Stadt</rdfs:label>
+  </rdf:Description>
+</rdf:RDF>
+<!--
+2.1 • Describe in natural language the content of this document.
+    
+    Germany is of type country
+
+    Country is of type Land
+
+    The capical of germany is berlin, which is a city
+     -->
