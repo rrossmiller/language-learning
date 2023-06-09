@@ -147,9 +147,10 @@ mod.add_function('Slice_uint8_elem', retval('uint8_t'), [param('int64_t', 'handl
 mod.add_function('Slice_uint8_subslice', retval('int64_t'), [param('int64_t', 'handle'), param('int', 'st'), param('int', 'ed')])
 mod.add_function('Slice_uint8_set', None, [param('int64_t', 'handle'), param('int', 'idx'), param('uint8_t', 'value')])
 mod.add_function('Slice_uint8_append', None, [param('int64_t', 'handle'), param('uint8_t', 'value')])
-add_checked_function(mod, 'slices_CreateSlice', retval('int64_t'), [])
+add_checked_function(mod, 'slices_FibParallel', None, [param('int64_t', 'max'), param('int64_t', 'numWorkers'), param('int64_t', 'numTimes'), param('bool', 'verbose'), param('bool', 'goRun')])
 add_checked_function(mod, 'slices_IntSum', retval('int64_t'), [param('int64_t', 's')])
-add_checked_function(mod, 'slices_NotRecursive', None, [param('int64_t', 'max'), param('int64_t', 'numWorkers'), param('bool', 'verbose'), param('bool', 'goRun')])
+add_checked_function(mod, 'slices_CreateSlice', retval('int64_t'), [])
+add_checked_function(mod, 'slices_Fib', retval('int64_t'), [param('int64_t', 'max'), param('bool', 'verbose')])
 
 mod.generate(open('slices.c', 'w'))
 

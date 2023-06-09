@@ -285,9 +285,10 @@ extern unsigned char Slice_uint8_elem(long long handle, GoInt _idx);
 extern long long Slice_uint8_subslice(long long handle, GoInt _st, GoInt _ed);
 extern void Slice_uint8_set(long long handle, GoInt _idx, unsigned char _vl);
 extern void Slice_uint8_append(long long handle, unsigned char _vl);
-extern long long slices_CreateSlice();
+extern void slices_FibParallel(long long max, long long numWorkers, long long numTimes, char verbose, char goRun);
 extern long long slices_IntSum(long long s);
-extern void slices_NotRecursive(long long max, long long numWorkers, char verbose, char goRun);
+extern long long slices_CreateSlice();
+extern long long slices_Fib(long long max, char verbose);
 
 #ifdef __cplusplus
 }

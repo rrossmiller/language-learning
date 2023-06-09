@@ -2,21 +2,22 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from __future__ import print_function
-import math
-import random
 from out import slices, go
 import numpy as np
 
 from time import perf_counter
+
+
 def fib(max):
-    rtn =[]
+    rtn = []
     rtn.append(0)
     rtn.append(1)
 
-    for i in range(2,max):
-        rtn.append(rtn[i-1] + rtn[i-2])
+    for i in range(2, max):
+        rtn.append(rtn[i - 1] + rtn[i - 2])
     # print(rtn)
+    return rtn
+
 
 a = [1, 2, 3, 4]
 b = slices.CreateSlice()
@@ -29,32 +30,27 @@ print("slices.IntSum from Go slice:", slices.IntSum(b))
 print("slices.IntSum from numpy arr", slices.IntSum(go.Slice_int(arr)))
 
 print()
+ans = 63245986
 start = perf_counter()
-fib(40)
-print("Python elapsed:",perf_counter()-start)
+assert fib(40)[-1] == ans
+
+print("Python elapsed:", perf_counter() - start)
 
 start = perf_counter()
-slices.NotRecursive(40, 8, False, False)
-print("Go elapsed:",perf_counter()-start)
+assert slices.Fib(40, False)[-1] == ans
+print("Go elapsed:", perf_counter() - start)
 
 
 start = perf_counter()
-slices.NotRecursive(40, 8, False, True)
-print("go Go elapsed: ",perf_counter()-start)
-
-start = perf_counter()
-for _ in range(1000 ):
+for _ in range(1000):
     fib(40)
-print("1000 Python elapsed:",perf_counter()-start)
+print("1000 Python elapsed:", perf_counter() - start)
 
 start = perf_counter()
 for _ in range(1000):
-    slices.NotRecursive(40, 8, False, False)
-print("1000 Go elapsed:",perf_counter()-start)
-
+    slices.Fib(40, False)
+print("1000 Go elapsed:", perf_counter() - start)
 
 start = perf_counter()
-for _ in range(1000):
-    slices.NotRecursive(40, 8, False, True)
-print("1000 go Go elapsed: ",perf_counter()-start)
-
+slices.FibParallel(40, 8, 1000, False)
+print("1000 Go Parallel elapsed:", perf_counter() - start)

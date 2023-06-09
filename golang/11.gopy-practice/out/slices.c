@@ -2002,19 +2002,32 @@ PyObject * _wrap__slices_Slice_uint8_append(PyObject * PYBINDGEN_UNUSED(dummy), 
 
 
 PyObject *
-_wrap__slices_slices_CreateSlice(PyObject *PYBINDGEN_UNUSED(_args), PyObject *PYBINDGEN_UNUSED(_kwargs))
+_wrap__slices_slices_FibParallel(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
 {
     PyObject *py_retval;
-    int64_t retval;
+    int64_t max;
+    int64_t numWorkers;
+    int64_t numTimes;
+    bool verbose;
+    PyObject *py_verbose;
+    bool goRun;
+    PyObject *py_goRun;
+    const char *keywords[] = {"max", "numWorkers", "numTimes", "verbose", "goRun", NULL};
 
-    retval = slices_CreateSlice();
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "LLLOO", (char **) keywords, &max, &numWorkers, &numTimes, &py_verbose, &py_goRun)) {
+        return NULL;
+    }
+    verbose = (bool) PyObject_IsTrue(py_verbose);
+    goRun = (bool) PyObject_IsTrue(py_goRun);
+    slices_FibParallel(max, numWorkers, numTimes, verbose, goRun);
     if (PyErr_Occurred()) {
         return NULL;
     }
-    py_retval = Py_BuildValue((char *) "L", retval);
+    Py_INCREF(Py_None);
+    py_retval = Py_None;
     return py_retval;
 }
-PyObject * _wrap__slices_slices_CreateSlice(PyObject *PYBINDGEN_UNUSED(_args), PyObject *PYBINDGEN_UNUSED(_kwargs));
+PyObject * _wrap__slices_slices_FibParallel(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
 
 
 PyObject *
@@ -2039,31 +2052,43 @@ PyObject * _wrap__slices_slices_IntSum(PyObject * PYBINDGEN_UNUSED(dummy), PyObj
 
 
 PyObject *
-_wrap__slices_slices_NotRecursive(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
+_wrap__slices_slices_CreateSlice(PyObject *PYBINDGEN_UNUSED(_args), PyObject *PYBINDGEN_UNUSED(_kwargs))
 {
     PyObject *py_retval;
-    int64_t max;
-    int64_t numWorkers;
-    bool verbose;
-    PyObject *py_verbose;
-    bool goRun;
-    PyObject *py_goRun;
-    const char *keywords[] = {"max", "numWorkers", "verbose", "goRun", NULL};
+    int64_t retval;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "LLOO", (char **) keywords, &max, &numWorkers, &py_verbose, &py_goRun)) {
-        return NULL;
-    }
-    verbose = (bool) PyObject_IsTrue(py_verbose);
-    goRun = (bool) PyObject_IsTrue(py_goRun);
-    slices_NotRecursive(max, numWorkers, verbose, goRun);
+    retval = slices_CreateSlice();
     if (PyErr_Occurred()) {
         return NULL;
     }
-    Py_INCREF(Py_None);
-    py_retval = Py_None;
+    py_retval = Py_BuildValue((char *) "L", retval);
     return py_retval;
 }
-PyObject * _wrap__slices_slices_NotRecursive(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
+PyObject * _wrap__slices_slices_CreateSlice(PyObject *PYBINDGEN_UNUSED(_args), PyObject *PYBINDGEN_UNUSED(_kwargs));
+
+
+PyObject *
+_wrap__slices_slices_Fib(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs)
+{
+    PyObject *py_retval;
+    int64_t retval;
+    int64_t max;
+    bool verbose;
+    PyObject *py_verbose;
+    const char *keywords[] = {"max", "verbose", NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "LO", (char **) keywords, &max, &py_verbose)) {
+        return NULL;
+    }
+    verbose = (bool) PyObject_IsTrue(py_verbose);
+    retval = slices_Fib(max, verbose);
+    if (PyErr_Occurred()) {
+        return NULL;
+    }
+    py_retval = Py_BuildValue((char *) "L", retval);
+    return py_retval;
+}
+PyObject * _wrap__slices_slices_Fib(PyObject * PYBINDGEN_UNUSED(dummy), PyObject *args, PyObject *kwargs);
 
 static PyMethodDef _slices_functions[] = {
     {(char *) "GoPyInit", (PyCFunction) _wrap__slices_GoPyInit, METH_NOARGS, "GoPyInit()\n\n" },
@@ -2172,9 +2197,10 @@ static PyMethodDef _slices_functions[] = {
     {(char *) "Slice_uint8_subslice", (PyCFunction) _wrap__slices_Slice_uint8_subslice, METH_KEYWORDS|METH_VARARGS, "Slice_uint8_subslice(handle, st, ed)\n\ntype: handle: int64_t\ntype: st: int\ntype: ed: int" },
     {(char *) "Slice_uint8_set", (PyCFunction) _wrap__slices_Slice_uint8_set, METH_KEYWORDS|METH_VARARGS, "Slice_uint8_set(handle, idx, value)\n\ntype: handle: int64_t\ntype: idx: int\ntype: value: uint8_t" },
     {(char *) "Slice_uint8_append", (PyCFunction) _wrap__slices_Slice_uint8_append, METH_KEYWORDS|METH_VARARGS, "Slice_uint8_append(handle, value)\n\ntype: handle: int64_t\ntype: value: uint8_t" },
-    {(char *) "slices_CreateSlice", (PyCFunction) _wrap__slices_slices_CreateSlice, METH_NOARGS, "slices_CreateSlice()\n\n" },
+    {(char *) "slices_FibParallel", (PyCFunction) _wrap__slices_slices_FibParallel, METH_KEYWORDS|METH_VARARGS, "slices_FibParallel(max, numWorkers, numTimes, verbose, goRun)\n\ntype: max: int64_t\ntype: numWorkers: int64_t\ntype: numTimes: int64_t\ntype: verbose: bool\ntype: goRun: bool" },
     {(char *) "slices_IntSum", (PyCFunction) _wrap__slices_slices_IntSum, METH_KEYWORDS|METH_VARARGS, "slices_IntSum(s)\n\ntype: s: int64_t" },
-    {(char *) "slices_NotRecursive", (PyCFunction) _wrap__slices_slices_NotRecursive, METH_KEYWORDS|METH_VARARGS, "slices_NotRecursive(max, numWorkers, verbose, goRun)\n\ntype: max: int64_t\ntype: numWorkers: int64_t\ntype: verbose: bool\ntype: goRun: bool" },
+    {(char *) "slices_CreateSlice", (PyCFunction) _wrap__slices_slices_CreateSlice, METH_NOARGS, "slices_CreateSlice()\n\n" },
+    {(char *) "slices_Fib", (PyCFunction) _wrap__slices_slices_Fib, METH_KEYWORDS|METH_VARARGS, "slices_Fib(max, verbose)\n\ntype: max: int64_t\ntype: verbose: bool" },
     {NULL, NULL, 0, NULL}
 };
 #if PY_VERSION_HEX >= 0x03000000

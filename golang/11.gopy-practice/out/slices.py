@@ -55,14 +55,17 @@ os.chdir(cwd)
 
 
 # ---- Functions ---
-def CreateSlice():
-	"""CreateSlice() []int"""
-	return go.Slice_int(handle=_slices.slices_CreateSlice())
+def FibParallel(max, numWorkers, numTimes, verbose, goRun=False):
+	"""FibParallel(int max, int numWorkers, int numTimes, bool verbose) """
+	_slices.slices_FibParallel(max, numWorkers, numTimes, verbose, goRun)
 def IntSum(s):
 	"""IntSum([]int s) int"""
 	return _slices.slices_IntSum(s.handle)
-def NotRecursive(max, numWorkers, verbose, goRun=False):
-	"""NotRecursive(int max, int numWorkers, bool verbose) """
-	_slices.slices_NotRecursive(max, numWorkers, verbose, goRun)
+def CreateSlice():
+	"""CreateSlice() []int"""
+	return go.Slice_int(handle=_slices.slices_CreateSlice())
+def Fib(max, verbose):
+	"""Fib(int max, bool verbose) []int"""
+	return go.Slice_int(handle=_slices.slices_Fib(max, verbose))
 
 

@@ -1117,13 +1117,15 @@ func Slice_uint8_append(handle CGoHandle, _vl C.uchar) {
 
 // ---- Functions ---
 
-//export slices_CreateSlice
-func slices_CreateSlice() CGoHandle {
+//export slices_FibParallel
+func slices_FibParallel(max C.longlong, numWorkers C.longlong, numTimes C.longlong, verbose C.char, goRun C.char) {
 	_saved_thread := C.PyEval_SaveThread()
 	defer C.PyEval_RestoreThread(_saved_thread)
-	cret := slices.CreateSlice()
-
-	return handleFromPtr_Slice_int(&cret)
+	if boolPyToGo(goRun) {
+		go slices.FibParallel(int(max), int(numWorkers), int(numTimes), boolPyToGo(verbose))
+	} else {
+		slices.FibParallel(int(max), int(numWorkers), int(numTimes), boolPyToGo(verbose))
+	}
 }
 
 //export slices_IntSum
@@ -1134,13 +1136,20 @@ func slices_IntSum(s CGoHandle) C.longlong {
 
 }
 
-//export slices_NotRecursive
-func slices_NotRecursive(max C.longlong, numWorkers C.longlong, verbose C.char, goRun C.char) {
+//export slices_CreateSlice
+func slices_CreateSlice() CGoHandle {
 	_saved_thread := C.PyEval_SaveThread()
 	defer C.PyEval_RestoreThread(_saved_thread)
-	if boolPyToGo(goRun) {
-		go slices.NotRecursive(int(max), int(numWorkers), boolPyToGo(verbose))
-	} else {
-		slices.NotRecursive(int(max), int(numWorkers), boolPyToGo(verbose))
-	}
+	cret := slices.CreateSlice()
+
+	return handleFromPtr_Slice_int(&cret)
+}
+
+//export slices_Fib
+func slices_Fib(max C.longlong, verbose C.char) CGoHandle {
+	_saved_thread := C.PyEval_SaveThread()
+	defer C.PyEval_RestoreThread(_saved_thread)
+	cret := slices.Fib(int(max), boolPyToGo(verbose))
+
+	return handleFromPtr_Slice_int(&cret)
 }

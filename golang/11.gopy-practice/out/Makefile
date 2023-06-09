@@ -5,7 +5,7 @@
 GOCMD=go
 GOBUILD=$(GOCMD) build -mod=mod
 GOIMPORTS=goimports
-PYTHON=/Users/rrossmil/Documents/personal/language-learning/golang/gopy-practice/venv/bin/python3
+PYTHON=/Users/rrossmil/.venv/gopy/bin/python3
 LIBEXT=.so
 
 # get the CC and flags used to build python:
