@@ -13,3 +13,4 @@ mlruns
 
 # data
 *.json
+*.class
