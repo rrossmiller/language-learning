@@ -10,7 +10,6 @@ x = ""
 class Singleton:
     _instance = None
     _lock = threading.RLock()
-    # _lock = threading.Lock()
 
     def __new__(cls):
         if cls._instance is None:
@@ -24,12 +23,12 @@ class Singleton:
 
 
 class RateTracker(Singleton):
-    max_rate = 60
-    token_max = 10_000
-    period = 60  # in seconds
+    max_requests = 100
+    token_max = 10
+    period = 5  # in seconds
+
     times: list[float] = []
     tokens: list[int] = []
-
     reqs = 0
     tkns = 0
 
@@ -67,14 +66,15 @@ class RateTracker(Singleton):
                     break
                 time_n = t
 
-            if rate >= cls.max_rate - 1 or tkn_rate >= cls.token_max:
+            if rate >= cls.max_requests - 1 or tkn_rate >= cls.token_max:
                 # (period - (elapsed time of requests that count towards the req rate)) * (how many more periods need to be waited to finish)
                 wait_time = cls.period - (last_time - time_n)
 
                 # hold the lock until running can continue
-                print("rate in last min:", rate)
-                print("tokens in last min:", tkn_rate)
+                print("rate in last period:", rate)
+                print("tokens in last period:", tkn_rate)
                 print("sleeping for", wait_time)
+                print()
                 time.sleep(wait_time)
             return cls.reqs, sum(cls.tokens)
 
@@ -106,8 +106,8 @@ class RateTracker(Singleton):
                 rate += 1
 
             # (period - (elapsed time of requests that count towards the req rate)) * (how many more periods need to be waited to finish)
-            wait_time = (cls.period - (last - t)) * (len(cls.times) / cls.max_rate)
-            return (rate < cls.max_rate, wait_time)
+            wait_time = (cls.period - (last - t)) * (len(cls.times) / cls.max_requests)
+            return (rate < cls.max_requests, wait_time)
 
         # return if the rate is below the threshold and how long to wait
         # return ()
