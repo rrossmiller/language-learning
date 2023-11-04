@@ -1,6 +1,11 @@
 import threading
 import time
 
+import numpy as np
+
+x = np.array([""])
+x = ""
+
 
 class Singleton:
     _instance = None
@@ -18,8 +23,7 @@ class Singleton:
         return cls._instance
 
 
-class RateTracker:
-    _lock = threading.RLock()
+class RateTracker(Singleton):
     max_rate = 60
     token_max = 10_000
     period = 60  # in seconds
@@ -112,4 +116,3 @@ class RateTracker:
     def _add(cls):
         # with cls._lock:
         cls.times.append(time.time())
-
