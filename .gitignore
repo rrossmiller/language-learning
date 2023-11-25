@@ -11,6 +11,6 @@ target
 lightning_logs
 mlruns
 
-# data
+data
 *.json
 *.class
