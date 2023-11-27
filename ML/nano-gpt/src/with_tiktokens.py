@@ -1,19 +1,20 @@
 import os
 
+import tiktoken
 import torch
 from tqdm import trange
 
 from bigram_model import BiGramLanguageModel
 
-torch.manual_seed(1337)
 torch.set_printoptions(precision=4)
 
+encoder = tiktoken.encoding_for_model("gpt-4")
 
 # hyperparams
 batch_size = 32
 block_size = 8
 learning_rate = 1e-2
-max_iters = 3000
+max_iters = 30
 eval_iters = 200
 eval_interval = 300
 # ---------------
@@ -48,6 +49,7 @@ def train(
     model: torch.nn.Module,
     train_data: torch.Tensor,
     val_data: torch.Tensor,
+    decode,
     print_loss=False,
 ):
     print("using:", device)
@@ -89,68 +91,54 @@ def train(
     print("generate:")
     idx = torch.ones(1, 1, dtype=torch.long, device=device)
     print(decode(bigram_model.generate(idx, 300)[0].tolist()))
-    torch.save(model.state_dict(), "bigram_model.pt")
+    torch.save(model.state_dict(), "bigram_model_tiktoken.pt")
+
+
+def gen(decode, vocab_size):
+    model = BiGramLanguageModel(vocab_size)
+
+    st_dict = torch.load("bigram_model_tiktoken.pt")
+    model.load_state_dict(st_dict)
+    model.to(device)
+    model.eval()
+    print("generate:")
+    idx = torch.ones(1, 1, dtype=torch.long, device=device)
+    print(decode(model.generate(idx, 300)[0].tolist()))
 
 
 if __name__ == "__main__":
     os.system("clear")
+    import sys
 
     # read the data
     with open("../data/shakespeare.txt") as f:
         text = f.read()
 
-    chars = sorted(list(set(text)))
-    stoi = {c: i for i, c in enumerate(chars)}
-    itos = {i: c for i, c in enumerate(chars)}
+    tkns = sorted(list(set(encoder.encode(text))))
+    vocab_size = len(tkns)
+
+    stoi = {c: i for i, c in enumerate(tkns)}
+    itos = {i: encoder.decode([c]) for i, c in enumerate(tkns)}
     encode = lambda x: [stoi[c] for c in x]
     decode = lambda x: "".join(itos[c] for c in x)
 
-    print(f"chars: {''.join(c for c in chars[1:])}")
-    vocab_size = len(chars)
-
+    if len(sys.argv) > 1:
+        gen(decode, vocab_size)
+        exit()
     # encode data
-    data = torch.tensor(encode(text), dtype=torch.long)  # .to(device)
-    # print(data[:10])
+    data = torch.tensor(encoder.encode(text), dtype=torch.long)  # .to(device)
 
     n = int(0.9 * len(data))
     train_data, val_data = data[:n], data[n:]
 
-    # chunking text
-    # # Example test block
-    # x = train_data[:block_size]
-    # y = train_data[1 : block_size + 1]
-    #
-    # print()
-    # for t in range(block_size):
-    #     context = x[: t + 1]
-    #     target = y[t]
-    #     print(f"Input: {str(context.tolist()):<35} | Target: {target.tolist()}")
-
-    # Batching
-    # xb, yb = get_batch(train_data)
-    # print()
-    # print("inputs")
-    # print(xb.shape)
-    # print(xb)
-    # print("targets")
-    # print(yb.shape)
-    # print(yb)
-
     ##### BiGramModel
+    torch.manual_seed(1337)
     bigram_model = BiGramLanguageModel(vocab_size)
     bigram_model.to(device)
-    # print()
-    # out, loss = bigram_model(xb, yb)
-    # print(out.shape, loss)
-
-    # # testing generate
-    # print("generate:")
-    # idx = torch.ones(1, 1, dtype=torch.long)
-    # print(decode(bigram_model.generate(idx, 100)[0].tolist()))
 
     print(next(bigram_model.parameters()).device)
     print(train_data.device)
     # assert next(bigram_model.parameters()).device == train_data.device
     # train
     print()
-    train(bigram_model, train_data, val_data)
+    train(bigram_model, train_data, val_data, decode)
