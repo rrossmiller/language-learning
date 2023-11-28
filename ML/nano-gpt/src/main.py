@@ -11,14 +11,15 @@ torch.set_printoptions(precision=4)
 
 # hyperparams
 n_embed = 384
-batch_size = 64 # how many independent sequences will we process in parallel?
-block_size = 256 # what is the maximum context length for predictions? How many chars of history can be considered?
+batch_size = 64  # how many independent sequences will we process in parallel?
+block_size = 256  # what is the maximum context length for predictions? How many chars of history can be considered?
 learning_rate = 3e-4
 max_iters = 5000
 eval_interval = 500
 eval_iters = 200
 # ---------------
-device = "mps" if torch.backends.mps.is_available() else "cpu"
+# device = "mps" if torch.backends.mps.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def get_batch(data: torch.Tensor):

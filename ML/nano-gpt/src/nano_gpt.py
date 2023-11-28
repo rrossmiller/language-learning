@@ -2,6 +2,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+device = "mps" if torch.backends.mps.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 dropout = 0.2
 
 
@@ -101,7 +103,7 @@ class NanoGPT(nn.Module):
     def forward(self, idx, targets=None):
         B, T = idx.shape
         tkn_emb = self.token_embedding_table(idx)  # (Batch, Time, Channel) tensor
-        pos_emb = self.position_embedding_table(torch.arange(T, device="mps"))  # (T, C)
+        pos_emb = self.position_embedding_table(torch.arange(T, device=device))  # (T, C)
         x = tkn_emb + pos_emb
         x = self.blocks(x)
         x = self.lnorm(x)
