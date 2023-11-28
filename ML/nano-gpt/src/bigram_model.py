@@ -4,13 +4,15 @@ from torch.nn import functional as F
 
 
 class BiGramLanguageModel(nn.Module):
-    def __init__(self, vocab_size):
+    def __init__(self, vocab_size, n_embed):
         super().__init__()
 
-        self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
+        self.token_embedding_table = nn.Embedding(vocab_size, n_embed)
+        self.lm_head = nn.Linear(n_embed, vocab_size)
 
     def forward(self, idx, targets=None):
-        logits = self.token_embedding_table(idx)  # (Batch, Time, Channel) tensor
+        emb = self.token_embedding_table(idx)  # (Batch, Time, Channel) tensor
+        logits = self.lm_head(emb)
 
         if targets is not None:
             B, T, C = logits.shape

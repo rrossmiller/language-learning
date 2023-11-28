@@ -10,10 +10,11 @@ torch.set_printoptions(precision=4)
 
 
 # hyperparams
+n_embed = 256
 batch_size = 32
 block_size = 8
 learning_rate = 1e-2
-max_iters = 3000
+max_iters = 5000
 eval_iters = 200
 eval_interval = 300
 # ---------------
@@ -68,7 +69,7 @@ def train(
                 }
             )
 
-        xb, yb = get_batch(data)
+        xb, yb = get_batch(train_data)
         xb.to(device)
         yb.to(device)
 
@@ -92,6 +93,18 @@ def train(
     torch.save(model.state_dict(), "bigram_model.pt")
 
 
+def gen(decode, vocab_size):
+    model = BiGramLanguageModel(vocab_size, n_embed)
+
+    st_dict = torch.load("bigram_model.pt")
+    model.load_state_dict(st_dict)
+    model.to(device)
+    model.eval()
+    print("generate:")
+    idx = torch.ones(1, 1, dtype=torch.long, device=device)
+    print(decode(model.generate(idx, 300)[0].tolist()))
+
+
 if __name__ == "__main__":
     os.system("clear")
 
@@ -109,7 +122,7 @@ if __name__ == "__main__":
     vocab_size = len(chars)
 
     # encode data
-    data = torch.tensor(encode(text), dtype=torch.long)  # .to(device)
+    data = torch.tensor(encode(text), dtype=torch.long)
     # print(data[:10])
 
     n = int(0.9 * len(data))
@@ -137,7 +150,7 @@ if __name__ == "__main__":
     # print(yb)
 
     ##### BiGramModel
-    bigram_model = BiGramLanguageModel(vocab_size)
+    bigram_model = BiGramLanguageModel(vocab_size, n_embed)
     bigram_model.to(device)
     # print()
     # out, loss = bigram_model(xb, yb)

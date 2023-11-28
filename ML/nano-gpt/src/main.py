@@ -3,27 +3,28 @@ import os
 import torch
 from tqdm import trange
 
-from bigram_model import BiGramLanguageModel
+from nano_gpt import NanoGPT
 
 torch.manual_seed(1337)
 torch.set_printoptions(precision=4)
 
 
 # hyperparams
-batch_size = 32
-block_size = 8
-learning_rate = 1e-2
-max_iters = 3000
+n_embed = 384
+batch_size = 64 # how many independent sequences will we process in parallel?
+block_size = 256 # what is the maximum context length for predictions? How many chars of history can be considered?
+learning_rate = 3e-4
+max_iters = 5000
+eval_interval = 500
 eval_iters = 200
-eval_interval = 300
 # ---------------
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
 def get_batch(data: torch.Tensor):
-    ix = torch.randint(
-        len(data) - block_size, (batch_size,)
-    )  # get [batchsize X 1] random numbers betwen 0 and len(data)-block_size (so when building chunks, no index out of bounds)
+    # get [batchsize X 1] random numbers betwen 0 and len(data)-block_size (so when building chunks, no index out of bounds)
+    ix = torch.randint(len(data) - block_size, (batch_size,))
+
     x = torch.stack([data[i : i + block_size] for i in ix])
     y = torch.stack([data[i + 1 : i + block_size + 1] for i in ix])
     return x.to(device), y.to(device)
@@ -51,11 +52,10 @@ def train(
     print_loss=False,
 ):
     print("using:", device)
-    # typical lr would be 3e-4, but BiGram is small
     optim = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
     losses = []
-    t = trange(max_iters)
+    t = trange(max_iters + 1)
     for i in t:
         # every once in a while evaluate the loss on train and val sets
         if i % eval_interval == 0:
@@ -68,7 +68,7 @@ def train(
                 }
             )
 
-        xb, yb = get_batch(data)
+        xb, yb = get_batch(train_data)
         xb.to(device)
         yb.to(device)
 
@@ -86,10 +86,29 @@ def train(
         pd.DataFrame({"loss": losses}).plot()
         plt.show()
 
+    torch.save(model.state_dict(), "nano_gpt.pt")
+
+    print("generate:")
+    idx = torch.zeros(1, 1, dtype=torch.long, device=device)
+    txt = decode(model.generate(idx, 300)[0].tolist())
+    print(txt)
+    with open("nano_gpt.txt", "w") as fout:
+        fout.write(txt)
+
+
+def gen(decode, block_size, vocab_size):
+    model = NanoGPT(vocab_size, block_size, n_embed)
+
+    st_dict = torch.load("nano_gpt.pt")
+    model.load_state_dict(st_dict)
+    model.to(device)
+    model.eval()
     print("generate:")
     idx = torch.ones(1, 1, dtype=torch.long, device=device)
-    print(decode(bigram_model.generate(idx, 300)[0].tolist()))
-    torch.save(model.state_dict(), "bigram_model.pt")
+    txt = decode(model.generate(idx, 300)[0].tolist())
+    print(txt)
+    with open("nano_gpt.txt", "w") as fout:
+        fout.write(txt)
 
 
 if __name__ == "__main__":
@@ -113,12 +132,13 @@ if __name__ == "__main__":
 
     n = int(0.9 * len(data))
     train_data, val_data = data[:n], data[n:]
+
     ##### BiGramModel
-    bigram_model = BiGramLanguageModel(vocab_size)
+    bigram_model = NanoGPT(vocab_size, block_size, n_embed)
     bigram_model.to(device)
-    print(next(bigram_model.parameters()).device)
-    print(train_data.device)
-    # assert next(bigram_model.parameters()).device == train_data.device
+    # print(next(bigram_model.parameters()).device)
+    # print(train_data.device)
+    # print()
+
     # train
-    print()
     train(bigram_model, train_data, val_data)
