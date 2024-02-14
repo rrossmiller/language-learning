@@ -1,8 +1,5 @@
 use mini_redis::{client, Result};
 
-async fn hi() {
-    println!("hi");
-}
 #[tokio::main]
 async fn main() -> Result<()> {
     // Open a connection to the mini-redis address.
@@ -17,8 +14,5 @@ async fn main() -> Result<()> {
         println!("got value from the server;\nresult={:?}", r);
     }
 
-    let op = hi();
-    println!("hello");
-    op.await;
     Ok(())
 }
