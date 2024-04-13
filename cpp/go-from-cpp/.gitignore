@@ -1,0 +1,4 @@
+a.out
+*.dylib
+*.so
+*.h
