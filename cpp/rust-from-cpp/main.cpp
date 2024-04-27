@@ -7,7 +7,7 @@ int main() {
     printf("Called Rust function, result: %d\n", result);
 
     bool b = greater_than_5(4);
-    printf("%d\n", b);
+    printf("4 > 5 -> 0: %d\n", b);
     b = greater_than_5(6);
-    printf("%d\n", b);
+    printf("6 > 5 -> 1: %d\n", b);
 }
