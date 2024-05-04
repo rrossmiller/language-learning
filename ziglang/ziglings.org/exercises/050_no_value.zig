@@ -77,7 +77,7 @@ pub fn main() void {
     printSecondLine();
 }
 
-fn printSecondLine() Err {
+fn printSecondLine() void {
     var second_line2: ?*const [18]u8 = null;
     second_line2 = "even death may die";
 
