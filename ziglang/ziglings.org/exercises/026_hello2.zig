@@ -4,7 +4,7 @@
 // can fail!
 //
 const std = @import("std");
-
+const stdout = std.io.getStdOut().writer();
 // Take note that this main() definition now returns "!void" rather
 // than just "void". Since there's no specific error type, this means
 // that Zig will infer the error type. This is appropriate in the case
@@ -16,12 +16,12 @@ const std = @import("std");
 //
 pub fn main() !void {
     // We get a Writer for Standard Out so we can print() to it.
-    const stdout = std.io.getStdOut().writer();
+    // const stdout = std.io.getStdOut().writer();
 
     // Unlike std.debug.print(), the Standard Out writer can fail
     // with an error. We don't care _what_ the error is, we want
     // to be able to pass it up as a return value of main().
     //
     // We just learned of a single statement which can accomplish this.
-    stdout.print("Hello world!\n", .{});
+    try stdout.print("Hello world!\n", .{});
 }
