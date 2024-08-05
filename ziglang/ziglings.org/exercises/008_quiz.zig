@@ -35,7 +35,12 @@ pub fn main() void {
     x = 3;
     lang[1] = letters[x];
 
+<<<<<<< HEAD
+    x = letters.len - 1;
+    lang[2] = letters[x];
+=======
     lang[2] = letters[letters.len - 1];
+>>>>>>> f8453b2c24c5077a228fa24f7a1fa1cf30645918
 
     // We want to "Program in Zig!" of course:
     std.debug.print("Program in {s}!\n", .{lang});

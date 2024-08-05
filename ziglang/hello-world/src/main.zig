@@ -1,4 +1,5 @@
 const std = @import("std");
+// const root = @import("./root.zig");
 
 pub fn main() !void {
     // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
@@ -12,6 +13,8 @@ pub fn main() !void {
     const stdout = bw.writer();
 
     try stdout.print("Run `zig build test` to run the tests.\n", .{});
+
+    // std.debug.print("add 1+3: {i32}", root.add(1, 3));
 
     try bw.flush(); // don't forget to flush!
 }
