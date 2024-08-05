@@ -4,9 +4,9 @@
 int main() {
     printf("hi\n");
 
-    bool ans = gt3(2);
+    bool ans = Gt3(2);
     printf("%d\n", ans);
 
-    ans = gt3(4);
+    ans = Gt3(4);
     printf("%d\n", ans);
 }

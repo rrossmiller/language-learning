@@ -2,5 +2,5 @@
 // #include "/home/tigergraph/libgt3.h"
 
 inline int greater_than_3(float n) {
-    return gt3(n);
+    return Gt3(n);
 }

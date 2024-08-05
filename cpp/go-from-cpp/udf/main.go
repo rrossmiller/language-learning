@@ -6,7 +6,7 @@ import (
 
 func main() {}
 
-//export gt3
-func gt3(num float64) bool {
+//export Gt3
+func Gt3(num float64) bool {
 	return num > 3
 }
